@@ -5,7 +5,7 @@
  * @h: pointer to the head of list
  * Return: number
  */
-size_t dlistint_len(const dliistint_t *h)
+size_t dlistint_len(const dlistint_t *h);
 {
     size_t b;
 
