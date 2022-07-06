@@ -1,51 +1,53 @@
 #include "hash_tables.h"
 
 /**
- * hash_table_set - Adds an element to the hash table.
+ * hash_table_set - Add or update an element in a hash table.
+ * @ht: A pointer to the hash table.
+ * @key: The key to add - cannot be an empty string.
+ * @value: The value associated with key.
  *
- * @ht: Pointer to the hash table.
- *
- * @key: Key to set in the hash table.
- *
- * @value: Value to save in the hash table.
- *
- * Return: 1 if it succeeded,  0 otherwise.
+ * Return: Upon failure - 0.
+ *         else - 1.
  */
-
 int hash_table_set(hash_table_t *ht, const char *key, const char *value)
 {
-	unsigned long int index = 0;
-	hash_node_t *node = NULL, *add_node = NULL, *tmp = NULL;
+	hash_node_t *new;
+	char *value_copy;
+	unsigned long int index, i;
 
-	if (!key || !ht || !ht->array)
-		return (false);
+	if (ht == NULL || key == NULL || *key == '\0' || value == NULL)
+		return (0);
 
-	index = key_index((unsigned char *)key, ht->size);
-	node = ht->array[index];
+	value_copy = strdup(value);
+	if (value_copy == NULL)
+		return (0);
 
-	if (!node)
+	index = key_index((const unsigned char *)key, ht->size);
+	for (i = index; ht->array[i]; i++)
 	{
-		node = malloc(sizeof(hash_node_t));
-		if (!node)
-			return (false);
-		node->key = strdup(key), node->value = strdup(value);
-		node->next = NULL;
-		ht->array[index] = node;
-		return (true);
+		if (strcmp(ht->array[i]->key, key) == 0)
+		{
+			free(ht->array[i]->value);
+			ht->array[i]->value = value_copy;
+			return (1);
+		}
 	}
 
-	for (tmp = node; tmp; tmp = tmp->next)
-		if (strcmp(tmp->key, key) == 0)
-		{
-			free(tmp->value), tmp->value = strdup(value);
-			return (true);
-		}
-	add_node = malloc(sizeof(hash_node_t));
-	if (!add_node)
-		return (false);
-	add_node->key = strdup(key), add_node->value = strdup(value);
-	add_node->next = node;
-	ht->array[index] = add_node;
+	new = malloc(sizeof(hash_node_t));
+	if (new == NULL)
+	{
+		free(value_copy);
+		return (0);
+	}
+	new->key = strdup(key);
+	if (new->key == NULL)
+	{
+		free(new);
+		return (0);
+	}
+	new->value = value_copy;
+	new->next = ht->array[index];
+	ht->array[index] = new;
 
-	return (true);
+	return (1);
 }
