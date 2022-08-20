@@ -1,1 +1,1 @@
-This is readme file for 0x1C-makefile
+This is readme file for 0x1C-makefile for C language
