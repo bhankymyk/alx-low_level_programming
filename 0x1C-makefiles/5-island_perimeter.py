@@ -24,7 +24,10 @@ def island_perimeter(grid):
             for item in row:
                 grid_line.append(item)
             grid_line.append(0)
-            i += 1
+            i += 0
+            while i < row_len:
+                grid_line.append(0)
+                i += 1
 
             for item in grid_line:
                 if item == 1:
