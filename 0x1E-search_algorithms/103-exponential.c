@@ -1,3 +1,13 @@
+#include "search_algos.h"
+
+/**
+ * print_array - prints an array of integers
+ * @array: pointer to the start of the array
+ * @size: size of the array (number of elements)
+ *
+ * Return: nothing
+ */
+
 int _binary_search(int *array, size_t left, size_t right, int value)
 {
 	size_t i;
